@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "geographic",
+  "version": "${version}",
+  "name": "Geographic",
+  "description": "",
+  "authors": ["Capozi"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/geographic/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "net.capozi.geographic.GeographicDataGenerator"
+    ],
+    "client": [
+      "net.capozi.geographic.GeographicClient"
+    ],
+    "main": [
+      "net.capozi.geographic.Geographic"
+    ]
+  },
+  "mixins": [
+    "geographic.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
