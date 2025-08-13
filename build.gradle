@@ -27,10 +27,9 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    minecraft "com.mojang:minecraft:1.21.1"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 

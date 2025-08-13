@@ -21,7 +21,7 @@ public abstract class PlayerEntityMixin {
         Block blockBelow = stateBelow.getBlock();
         if (blockBelow.equals(Blocks.DIRT_PATH)) {
             player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)
-                    .setBaseValue(0.175);
+                    .setBaseValue(0.15);
             player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY)
                     .setBaseValue(0.175);
         }
