@@ -16,7 +16,7 @@ public abstract class PlayerEntityMixin {
     @Inject(method = "getMovementSpeed", at = @At("HEAD"))
     private void onMove(CallbackInfoReturnable<Float> cir) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        BlockPos posBelow = player.getBlockPos().down();
+        BlockPos posBelow = player.getBlockPos();
         BlockState stateBelow = player.getWorld().getBlockState(posBelow);
         Block blockBelow = stateBelow.getBlock();
         if (blockBelow.equals(Blocks.DIRT_PATH)) {
@@ -24,6 +24,11 @@ public abstract class PlayerEntityMixin {
                     .setBaseValue(0.15);
             player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY)
                     .setBaseValue(0.175);
+        } else {
+            player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)
+                    .setBaseValue(0.1);
+            player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_EFFICIENCY)
+                    .setBaseValue(0.1);
         }
     }
 }

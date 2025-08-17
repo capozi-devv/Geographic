@@ -14,6 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
+@Environment(EnvType.CLIENT)
 public class CalibratedAnglePredicateProvider implements ClampedModelPredicateProvider {
     public static final int field_38798 = 0;
     private final AngleInterpolator aimedInterpolator = new AngleInterpolator();

@@ -4,7 +4,7 @@
     "layer0": "geographic:item/compass_16"
   },
   "overrides": [
-    { "predicate": { "angle": 0.000000 }, "model": "geographic:item/compass" },
+    { "predicate": { "angle": 0.000000 }, "model": "geographic:item/calibrated_compass" },
     { "predicate": { "angle": 0.015625 }, "model": "geographic:item/compass_17" },
     { "predicate": { "angle": 0.046875 }, "model": "geographic:item/compass_18" },
     { "predicate": { "angle": 0.078125 }, "model": "geographic:item/compass_19" },
@@ -36,6 +36,6 @@
     { "predicate": { "angle": 0.890625 }, "model": "geographic:item/compass_13" },
     { "predicate": { "angle": 0.921875 }, "model": "geographic:item/compass_14" },
     { "predicate": { "angle": 0.953125 }, "model": "geographic:item/compass_15" },
-    { "predicate": { "angle": 0.984375 }, "model": "geographic:item/compass" }
+    { "predicate": { "angle": 0.984375 }, "model": "geographic:item/calibrated_compass" }
   ]
 }

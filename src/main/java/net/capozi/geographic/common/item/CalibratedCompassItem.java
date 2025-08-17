@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -26,10 +27,19 @@ public class CalibratedCompassItem extends Item {
         super(settings);
     }
     @Nullable
-    public static GlobalPos createSpawnPos(World world) {
-        return world.getDimension().natural() ? GlobalPos.create(world.getRegistryKey(), world.getSpawnPos()) : null;
+    public static GlobalPos createPos(World world) {
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        RegistryKey<World> dimension = world.getRegistryKey();
+        BlockPos blockPos = new BlockPos(x, y, z);
+        GlobalPos targetPos = new GlobalPos(dimension, blockPos);
+        return targetPos;
     }
-
+    public static void setTarget(ItemStack stack, GlobalPos pos) {
+        if (stack.isEmpty() || !(stack.getItem() instanceof CalibratedCompassItem)) return;
+        stack.set(DataComponentTypes.LODESTONE_TRACKER, new LodestoneTrackerComponent(Optional.of(pos), true));
+    }
     public boolean hasGlint(ItemStack stack) {
         return stack.contains(DataComponentTypes.LODESTONE_TRACKER) || super.hasGlint(stack);
     }
