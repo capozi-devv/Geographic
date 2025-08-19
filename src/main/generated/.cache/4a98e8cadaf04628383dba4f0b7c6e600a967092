@@ -1,0 +1,5 @@
+// 1.21.1	2025-08-18T11:42:38.041364	Geographic/Recipes
+214f684b46dfd0c56513271e5a2d085466172ed9 data/geographic/recipe/calibrated_compass.json
+1abbd5cca241de923516aebb4b4d7e51094ea6bf data/geographic/recipe/compass.json
+aab52b637acbfaa957409227633efdfae5faee53 data/geographic/advancement/recipes/tools/compass.json
+c352564f0d54ab0d0131f4d75bfa23e0861fc2f7 data/geographic/advancement/recipes/tools/calibrated_compass.json

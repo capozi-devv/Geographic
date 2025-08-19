@@ -1,0 +1,27 @@
+{
+  "criteria": {
+    "goated": {
+      "conditions": {
+        "item": {
+          "items": "minecraft:goat_horn"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": "Play a goat horn",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:goat_horn"
+    },
+    "title": "Goated with the Sauce"
+  },
+  "requirements": [
+    [
+      "goated"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

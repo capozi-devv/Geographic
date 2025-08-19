@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "got_compass": {
+      "conditions": {
+        "items": [
+          {
+            "items": "geographic:calibrated_compass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": "Obtain a Calibrated Compass",
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "geographic:calibrated_compass"
+    },
+    "title": "Calibration Operation"
+  },
+  "requirements": [
+    [
+      "got_compass"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

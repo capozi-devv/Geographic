@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "B": {
+      "tag": "minecraft:buttons"
+    },
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "M": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    " G ",
+    "MCM",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "geographic:calibrated_compass"
+  }
+}
