@@ -13,6 +13,7 @@ public class Geographic implements ModInitializer {
         ItemInit.init();
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
             content.addAfter(Items.COMPASS, ItemInit.CALIBRATED_COMPASS);
+
         });
     }
 }

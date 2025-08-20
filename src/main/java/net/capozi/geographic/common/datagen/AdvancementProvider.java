@@ -5,10 +5,14 @@ import net.capozi.geographic.foundation.ItemInit;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementFrame;
 import net.minecraft.advancement.criterion.ConsumeItemCriterion;
+import net.minecraft.advancement.criterion.Criterion;
+import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
@@ -21,6 +25,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
     public AdvancementProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
         super(output, registryLookup);
     }
+
     @Override
     public void generateAdvancement(RegistryWrapper.WrapperLookup wrapperLookup, Consumer<AdvancementEntry> consumer) {
         AdvancementEntry getCompass = Advancement.Builder.create()
@@ -29,7 +34,7 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                         Text.literal("Calibration Operation"),
                         Text.literal("Obtain a Calibrated Compass"),
                         Identifier.ofVanilla("textures/gui/advancements/backgrounds/adventure.png"),
-                        AdvancementFrame.GOAL,
+                        AdvancementFrame.TASK,
                         true,
                         true,
                         false
@@ -40,14 +45,27 @@ public class AdvancementProvider extends FabricAdvancementProvider {
                 .display(
                         Items.GOAT_HORN,
                         Text.literal("Goated with the Sauce"),
-                        Text.literal("Play a goat horn"),
+                        Text.literal("Obtain a goat horn"),
                         Identifier.ofVanilla("textures/gui/advancements/backgrounds/adventure.png"),
                         AdvancementFrame.TASK,
                         true,
                         true,
                         false
                 )
-                .criterion("goated", ConsumeItemCriterion.Conditions.item(Items.GOAT_HORN))
+                .criterion("goated", InventoryChangedCriterion.Conditions.items(Items.GOAT_HORN))
                 .build(consumer, Geographic.MOD_ID + "/goated");
+        AdvancementEntry worldwalker = Advancement.Builder.create()
+                .display(
+                        ItemInit.GRAND_NORTH_STAR,
+                        Text.literal("Walker of Worlds"),
+                        Text.literal("Obtain Adventuring Time, Hot Tourist Destination, Caves and Cliffs, and Subspace Bubble, while having a North Star"),
+                        Identifier.ofVanilla("textures/gui/advancements/backgrounds/adventure.png"),
+                        AdvancementFrame.CHALLENGE,
+                        true,
+                        true,
+                        true
+                )
+                .criterion("worldwalker", ConsumeItemCriterion.Conditions.item(Items.COMMAND_BLOCK))
+                .build(consumer, Geographic.MOD_ID + "/worldwalker");
     }
 }

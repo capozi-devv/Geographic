@@ -2,16 +2,18 @@
   "criteria": {
     "goated": {
       "conditions": {
-        "item": {
-          "items": "minecraft:goat_horn"
-        }
+        "items": [
+          {
+            "items": "minecraft:goat_horn"
+          }
+        ]
       },
-      "trigger": "minecraft:consume_item"
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "display": {
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
-    "description": "Play a goat horn",
+    "description": "Obtain a goat horn",
     "icon": {
       "count": 1,
       "id": "minecraft:goat_horn"

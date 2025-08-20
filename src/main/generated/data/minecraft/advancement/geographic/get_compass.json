@@ -14,7 +14,6 @@
   "display": {
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": "Obtain a Calibrated Compass",
-    "frame": "goal",
     "icon": {
       "count": 1,
       "id": "geographic:calibrated_compass"
