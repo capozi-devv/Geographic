@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "geographic:item/compass_16"
+    "layer0": "geographic:item/calibrated_compass"
   },
   "overrides": [
     { "predicate": { "angle": 0.000000 }, "model": "geographic:item/calibrated_compass" },

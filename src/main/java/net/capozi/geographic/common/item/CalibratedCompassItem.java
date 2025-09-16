@@ -1,6 +1,8 @@
 package net.capozi.geographic.common.item;
 
 import net.capozi.geographic.foundation.ItemInit;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
@@ -10,10 +12,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
@@ -26,8 +30,7 @@ public class CalibratedCompassItem extends Item {
     public CalibratedCompassItem(Settings settings) {
         super(settings);
     }
-    @Nullable
-    public static GlobalPos createPos(World world) {
+    @Nullable public static GlobalPos createPos(World world) {
         int x = 0;
         int y = 0;
         int z = 0;
@@ -43,7 +46,6 @@ public class CalibratedCompassItem extends Item {
     public boolean hasGlint(ItemStack stack) {
         return stack.contains(DataComponentTypes.LODESTONE_TRACKER) || super.hasGlint(stack);
     }
-
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (world instanceof ServerWorld serverWorld) {
             LodestoneTrackerComponent lodestoneTrackerComponent = (LodestoneTrackerComponent)stack.get(DataComponentTypes.LODESTONE_TRACKER);
@@ -54,9 +56,7 @@ public class CalibratedCompassItem extends Item {
                 }
             }
         }
-
     }
-
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos blockPos = context.getBlockPos();
         World world = context.getWorld();
@@ -78,12 +78,43 @@ public class CalibratedCompassItem extends Item {
                     playerEntity.dropItem(itemStack2, false);
                 }
             }
-
             return ActionResult.success(world.isClient);
         }
     }
+    public static void registerCompassCalibration() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            PlayerEntity player = client.player;
+            World world = client.world;
+            if(client.player == null || !client.player.isAlive()) return; //that motherfucker is not real (or just dead)
+            ItemStack heldItem = client.player.getMainHandStack();
+            int xPosOffset = client.options.sneakKey.isPressed() ? 1 : 0;
+            int yPosOffest = client.options.jumpKey.isPressed() ? 1 : 0;
+            int zPosOffset = client.options.sprintKey.isPressed() ? 1 : 0;
+            if(heldItem.getItem() instanceof CalibratedCompassItem ) {
+                var tracker = heldItem.get(DataComponentTypes.LODESTONE_TRACKER);
+                GlobalPos currentStoredPos = tracker != null ? tracker.target().orElse(CalibratedCompassItem.createPos(world)) : CalibratedCompassItem.createPos(world);
+                if (client.options.attackKey.isPressed()) {
+                    BlockPos pos = currentStoredPos.pos();
+                    BlockPos newPos = new BlockPos(pos.getX() + xPosOffset, pos.getY() + yPosOffest, pos.getZ() + zPosOffset);
+                    GlobalPos updated = GlobalPos.create(currentStoredPos.dimension(), newPos);
+                    CalibratedCompassItem.setTarget(heldItem, updated);
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeIdentifier(world.getRegistryKey().getValue()); // dimension
+                    buf.writeBlockPos(newPos);
+                    player.sendMessage(Text.literal("Position Calibrated to: [" + newPos.toShortString() + "]"), true);
+                }
+                if (client.options.useKey.isPressed()) {
+                    BlockPos pos = currentStoredPos.pos();
+                    BlockPos newPos = new BlockPos(pos.getX() - xPosOffset, pos.getY() - yPosOffest, pos.getZ() - zPosOffset);
+                    GlobalPos updated = GlobalPos.create(currentStoredPos.dimension(), newPos);
+                    CalibratedCompassItem.setTarget(heldItem, updated);
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeIdentifier(world.getRegistryKey().getValue()); // dimension
+                    buf.writeBlockPos(newPos);
+                    player.sendMessage(Text.literal("Position Calibrated to: [" + newPos.toShortString() + "]"), true);
+                }
+            }
 
-    public String getTranslationKey(ItemStack stack) {
-        return stack.contains(DataComponentTypes.LODESTONE_TRACKER) ? "item.minecraft.lodestone_compass" : super.getTranslationKey(stack);
+        });
     }
 }

@@ -1,3 +1,6 @@
 {
-  "item.geographic.calibrated_compass" : "Calibrated Compass"
+  "item.geographic.calibrated_compass" : "Calibrated Compass",
+  "item.geographic.north_star": "§bNorth Star",
+  "item.geographic.grand_north_star": "§dGrand North Star",
+  "item.geographic.wandering_wayfinder": "Wanderer's Wayfinder"
 }
