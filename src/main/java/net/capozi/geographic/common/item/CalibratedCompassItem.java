@@ -90,7 +90,7 @@ public class CalibratedCompassItem extends Item {
             int xPosOffset = client.options.sneakKey.isPressed() ? 1 : 0;
             int yPosOffest = client.options.jumpKey.isPressed() ? 1 : 0;
             int zPosOffset = client.options.sprintKey.isPressed() ? 1 : 0;
-            if(heldItem.getItem() instanceof CalibratedCompassItem ) {
+            if(heldItem.getItem() instanceof CalibratedCompassItem && (client.options.sneakKey.isPressed() || client.options.jumpKey.isPressed() || client.options.sprintKey.isPressed())) {
                 var tracker = heldItem.get(DataComponentTypes.LODESTONE_TRACKER);
                 GlobalPos currentStoredPos = tracker != null ? tracker.target().orElse(CalibratedCompassItem.createPos(world)) : CalibratedCompassItem.createPos(world);
                 if (client.options.attackKey.isPressed()) {
@@ -114,7 +114,6 @@ public class CalibratedCompassItem extends Item {
                     player.sendMessage(Text.literal("Position Calibrated to: [" + newPos.toShortString() + "]"), true);
                 }
             }
-
         });
     }
 }
