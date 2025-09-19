@@ -29,7 +29,6 @@ public class GeographicClient implements ClientModInitializer {
             private double rotation;
             private double rota;
             private long lastUpdateTick;
-
             @Override
             public float unclampedCall(ItemStack stack, ClientWorld world, LivingEntity entityLiving, int seed) {
                 if (entityLiving == null && !stack.isInFrame()) {
@@ -40,15 +39,12 @@ public class GeographicClient implements ClientModInitializer {
                     if (world == null && entity.getWorld() instanceof ClientWorld) {
                         world = (ClientWorld) entity.getWorld();
                     }
-
                     double rotation = entityExists ? (double) entity.getYaw() : getFrameRotation((ItemFrameEntity) entity);
                     rotation = rotation % 360.0D;
                     double adjusted = Math.PI - ((rotation - 90.0D) * 0.01745329238474369D - getAngle(world, entity, stack));
-
                     if (entityExists) {
                         adjusted = wobble(world, adjusted);
                     }
-
                     final float f = (float) (adjusted / (Math.PI * 2D));
                     return MathHelper.floorMod(f, 1.0F);
                 }
@@ -63,7 +59,6 @@ public class GeographicClient implements ClientModInitializer {
                     rota *= 0.8D;
                     rotation += rota;
                 }
-
                 return rotation;
             }
             private double getFrameRotation(ItemFrameEntity itemFrame) {
