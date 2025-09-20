@@ -26,6 +26,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
+    "surveyor": "*",
     "minecraft": "${minecraft_version}"
   }
 }

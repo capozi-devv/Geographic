@@ -16,14 +16,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 public class GeographicClient implements ClientModInitializer {
-    public static World getClientWorld() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientWorld world = client.world;
-        return world;
-    }
     @Override public void onInitializeClient() {
         ModelPredicateProviderRegistry.register(ItemInit.CALIBRATED_COMPASS, Identifier.of(Geographic.MOD_ID, "angle"), new ClampedModelPredicateProvider() {
             private double rotation;
