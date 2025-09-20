@@ -18,9 +18,7 @@ public class Geographic implements ModInitializer {
         CalibratedCompassItem.registerCompassCalibration();
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
             content.addAfter(Items.RECOVERY_COMPASS, ItemInit.CALIBRATED_COMPASS);
-            content.addAfter(ItemInit.CALIBRATED_COMPASS, ItemInit.NORTH_STAR);
-            content.addAfter(ItemInit.NORTH_STAR, ItemInit.GRAND_NORTH_STAR);
-            content.addAfter(ItemInit.GRAND_NORTH_STAR, ItemInit.WANDERING_WAYFINDER);
+            content.addAfter(ItemInit.CALIBRATED_COMPASS, ItemInit.WANDERING_WAYFINDER);
         });
     }
 }
