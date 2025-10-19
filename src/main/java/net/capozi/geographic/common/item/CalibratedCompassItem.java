@@ -1,28 +1,23 @@
 package net.capozi.geographic.common.item;
 
 import net.capozi.geographic.foundation.ItemInit;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
@@ -32,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CalibratedCompassItem extends Item {
+    private int XorYorZ = 1;
     public CalibratedCompassItem(Settings settings) {
         super(settings);
     }
@@ -86,48 +82,39 @@ public class CalibratedCompassItem extends Item {
             return ActionResult.success(world.isClient);
         }
     }
-    public static void registerCompassCalibration() {
-        ServerTickEvents.END_SERVER_TICK.register(client -> {
-            PlayerEntity player = client.getCommandSource().getPlayer();
-            ItemStack heldItem = player.getMainHandStack();
-            World world = player.getWorld();
-            if(player == null || !player.isAlive()) return; //that motherfucker is not real (or just dead)
-            int xPosOffset;
-            int yPosOffest;
-            int zPosOffset;
-            ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
-                int x = minecraftClient.options.sneakKey.isPressed() ? 1 : 0;
-                int y = minecraftClient.options.jumpKey.isPressed() ? 1 : 0;
-                int z = minecraftClient.options.sprintKey.isPressed() ? 1 : 0;
-            });
-            if(heldItem.getItem() instanceof CalibratedCompassItem && (client.options.sneakKey.isPressed() || client.options.jumpKey.isPressed() || client.options.sprintKey.isPressed())) {
-                var tracker = heldItem.get(DataComponentTypes.LODESTONE_TRACKER);
-                GlobalPos currentStoredPos = tracker != null ? tracker.target().orElse(CalibratedCompassItem.createPos(world)) : CalibratedCompassItem.createPos(world);
-                if (client.options.attackKey.isPressed()) {
-                    BlockPos pos = currentStoredPos.pos();
-                    BlockPos newPos = new BlockPos(pos.getX() + xPosOffset, pos.getY() + yPosOffest, pos.getZ() + zPosOffset);
-                    GlobalPos updated = GlobalPos.create(currentStoredPos.dimension(), newPos);
-                    CalibratedCompassItem.setTarget(heldItem, updated);
-                    LodestoneTrackerComponent LSTrack = new LodestoneTrackerComponent(Optional.of(updated), true);
-                    heldItem.set(DataComponentTypes.LODESTONE_TRACKER, LSTrack);
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeIdentifier(world.getRegistryKey().getValue()); // dimension
-                    buf.writeBlockPos(newPos);
-                    player.sendMessage(Text.literal("Position Calibrated to: [" + newPos.toShortString() + "]"), true);
-                }
-                if (client.options.useKey.isPressed()) {
-                    BlockPos pos = currentStoredPos.pos();
-                    BlockPos newPos = new BlockPos(pos.getX() - xPosOffset, pos.getY() - yPosOffest, pos.getZ() - zPosOffset);
-                    GlobalPos updated = GlobalPos.create(currentStoredPos.dimension(), newPos);
-                    CalibratedCompassItem.setTarget(heldItem, updated);
-                    LodestoneTrackerComponent LSTrack = new LodestoneTrackerComponent(Optional.of(updated), true);
-                    heldItem.set(DataComponentTypes.LODESTONE_TRACKER, LSTrack);
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeIdentifier(world.getRegistryKey().getValue()); // dimension
-                    buf.writeBlockPos(newPos);
-                    player.sendMessage(Text.literal("Position Calibrated to: [ " + newPos.toShortString() + " ]"), true);
-                }
-            }
-        });
+    public String tooltipL;
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (user.isSneaking()) {
+            if (XorYorZ > 6) XorYorZ = 1;
+            XorYorZ++;
+            if (XorYorZ > 6) XorYorZ = 1;
+            user.sendMessage(Text.literal("Calibration Mode Set To: " + XorYorZ));
+            return TypedActionResult.pass(user.getStackInHand(hand));
+        }
+        int x = XorYorZ == 1 ? 1 : 0;
+        int y = XorYorZ == 2 ? 1 : 0;
+        int z = XorYorZ == 3 ? 1 : 0;
+        int xminus = XorYorZ == 4 ? 1 : 0;
+        int yminus = XorYorZ == 5 ? 1 : 0;
+        int zminus = XorYorZ == 6 ? 1 : 0;
+        ItemStack stack = user.getStackInHand(hand);
+        var tracker = stack.get(DataComponentTypes.LODESTONE_TRACKER);
+        GlobalPos storedPos = tracker != null ? tracker.target().orElse(CalibratedCompassItem.createPos(world)) : CalibratedCompassItem.createPos(world);
+        BlockPos pos = storedPos.pos();
+        BlockPos newPos = new BlockPos(pos.getX() + x - xminus, pos.getY() + y - yminus, pos.getZ() + z - zminus);
+        GlobalPos updated = GlobalPos.create(storedPos.dimension(), newPos);
+        CalibratedCompassItem.setTarget(stack, updated);
+        tooltipL = stack.getComponents().get(DataComponentTypes.LODESTONE_TRACKER).toString();
+        return TypedActionResult.success(user.getStackInHand(hand));
+    }
+    @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        try {
+            tooltip.add(Text.literal("Targeting: " + tooltipL));
+            // add calibration key
+        } catch (NullPointerException e) {
+            tooltip.add(Text.literal("Error Loading Position Data"));
+        }
     }
 }

@@ -15,7 +15,6 @@ public class Geographic implements ModInitializer {
         ItemInit.init();
         BlockInit.init();
         LootTableModifiers.modifyLootTables();
-        CalibratedCompassItem.registerCompassCalibration();
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
             content.addAfter(Items.RECOVERY_COMPASS, ItemInit.CALIBRATED_COMPASS);
             content.addAfter(ItemInit.CALIBRATED_COMPASS, ItemInit.WANDERING_WAYFINDER);
