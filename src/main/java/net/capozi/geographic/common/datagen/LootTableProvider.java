@@ -13,6 +13,6 @@ public class LootTableProvider extends FabricBlockLootTableProvider {
     }
     @Override
     public void generate() {
-        addDrop(BlockInit.WAYFINDER);
+        addDrop(BlockInit.ROPE_LADDER);
     }
 }

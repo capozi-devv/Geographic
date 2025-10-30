@@ -1,7 +1,7 @@
 package net.capozi.geographic.foundation;
 
 import net.capozi.geographic.Geographic;
-import net.capozi.geographic.common.block.WayfinderBlock;
+import net.capozi.geographic.common.block.RopeLadderBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -20,5 +20,5 @@ public class BlockInit {
         if (registerBlockItem) { registerBlockItem(name, block); }
         return Registry.register(Registries.BLOCK, Identifier.of(Geographic.MOD_ID, name), block);
     }
-    public static final Block WAYFINDER = registerBlock("wayfinder", new WayfinderBlock(AbstractBlock.Settings.copy(Blocks.STONE_BRICKS)), true);
+    public static final Block ROPE_LADDER = registerBlock("rope_ladder", new RopeLadderBlock(AbstractBlock.Settings.copy(Blocks.LADDER)), true);
 }

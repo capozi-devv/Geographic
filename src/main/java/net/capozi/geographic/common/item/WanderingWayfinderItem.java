@@ -5,10 +5,12 @@ import net.capozi.geographic.foundation.ItemInit;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -30,7 +32,7 @@ public class WanderingWayfinderItem extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         BlockPos blockPos = context.getBlockPos();
         World world = context.getWorld();
-        if (!world.getBlockState(blockPos).isOf(BlockInit.WAYFINDER)) {
+        if (world.getBlockState(blockPos) == Blocks.AIR.getDefaultState()) {
             return super.useOnBlock(context);
         } else {
             world.playSound((PlayerEntity)null, blockPos, SoundEvents.ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.PLAYERS, 1.0F, 1.0F);
@@ -74,5 +76,17 @@ public class WanderingWayfinderItem extends Item {
             }
         }
         return TypedActionResult.fail(stack);
+    }
+
+    @Override
+    public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+        if (!entity.getWorld().isClient() && entity instanceof PlayerEntity player) {
+            double x = (double)player.getWorld().getSpawnPos().getX();
+            double y = (double)player.getWorld().getSpawnPos().getY();
+            double z = (double)player.getWorld().getSpawnPos().getZ();
+            player.teleport(x, y, z, true);
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.FAIL;
     }
 }
