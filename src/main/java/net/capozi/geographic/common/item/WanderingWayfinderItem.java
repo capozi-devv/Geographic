@@ -1,6 +1,5 @@
 package net.capozi.geographic.common.item;
 
-import net.capozi.geographic.foundation.BlockInit;
 import net.capozi.geographic.foundation.ItemInit;
 import net.minecraft.block.Blocks;
 import net.minecraft.component.DataComponentTypes;
@@ -10,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -54,6 +52,10 @@ public class WanderingWayfinderItem extends Item {
         }
     }
     @Override
+    public boolean hasGlint(ItemStack stack) {
+        return stack.get(DataComponentTypes.LODESTONE_TRACKER).target().isPresent() ? true : false;
+    }
+    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         LodestoneTrackerComponent tracker = stack.get(DataComponentTypes.LODESTONE_TRACKER);
@@ -77,7 +79,6 @@ public class WanderingWayfinderItem extends Item {
         }
         return TypedActionResult.fail(stack);
     }
-
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (!entity.getWorld().isClient() && entity instanceof PlayerEntity player) {
